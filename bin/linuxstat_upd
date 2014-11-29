@@ -2,7 +2,7 @@
 #
 # $Id: linuxstat_upd,v 1.8 2005/07/17 17:56:50 boris Exp $
 #
-RRDTOOL=/usr/local/rrdtool/bin/rrdtool
+RRDTOOL=/usr/bin/rrdtool
 DIR=/var/lib/rrd/linuxstat
 
 btime=`cat /proc/stat| grep btime |sed 's/btime //'`
