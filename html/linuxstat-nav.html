@@ -1,0 +1,19 @@
+<html>
+<!-- $Id: linuxstat-nav.html,v 1.1 2004/03/24 15:06:52 boris Exp $ -->
+<head>
+<title>CPU Statistics - Navigation</title>
+</head>
+<body bgcolor="#dfc79e">
+<a href="/cgi-bin/linuxstat?scale=d&start=2day&xgrid=HOUR:1:DAY:1:HOUR:6:0:%25H:%25M"
+ target="main">day</a>
+<br>
+<a href="/cgi-bin/linuxstat?scale=w&start=14d&xgrid=DAY:1:WEEK:1:DAY:1:86400:%25e" 
+target="main">week</a>
+<br>
+<a href="/cgi-bin/linuxstat?scale=m&start=2m&xgrid=DAY:1:WEEK:1:WEEK:1:86400:%25e%25t%25b" 
+target="main">month</a>
+<br>
+<a href="/cgi-bin/linuxstat?scale=y&start=1y&xgrid=YEAR:1:MONTH:1:MONTH:1:2592000:%25b"
+target="main">year</a>
+</body>
+</html>

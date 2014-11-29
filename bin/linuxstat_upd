@@ -1,0 +1,60 @@
+#!/bin/sh
+#
+# $Id: linuxstat_upd,v 1.8 2005/07/17 17:56:50 boris Exp $
+#
+RRDTOOL=/usr/local/rrdtool/bin/rrdtool
+DIR=/var/lib/rrd/linuxstat
+
+btime=`cat /proc/stat| grep btime |sed 's/btime //'`
+now=`date +%s`
+uptime=`expr $now - $btime`
+
+set `cat /proc/stat |grep "^cpu"| grep -v "^cpu[0-7]"`
+$RRDTOOL update $DIR/cpu.rrd N:$2:$3:$4:$5
+$RRDTOOL update $DIR/cpu2.rrd N:$2:$3:$4:$5:$6:$7:$8
+
+if [ $uptime -gt 300 ] ; then
+  set `cat /proc/stat |grep "^page"`
+  pgi=$2 ; pgo=$3
+  set `cat /proc/stat |grep "^swap"`
+  swi=$2 ; swo=$3
+  $RRDTOOL update $DIR/page.rrd N:$pgi:$pgo:$swi:$swo
+
+  set `cat /proc/stat |grep "^intr"`
+  intr=$2
+  set `cat /proc/stat |grep "^ctxt"`
+  ctxt=$2
+  set `cat /proc/stat |grep "^processes"`
+  proc=$2
+  $RRDTOOL update $DIR/proc.rrd N:$intr:$ctxt:$proc
+
+  set `cat /proc/stat | grep ^disk_io|cut -d: -f3|tr -s "\(\)," "   "`
+  $RRDTOOL update $DIR/disk.rrd N:$2:$3:$4:$5
+fi
+
+nproc=`ps -e|wc -l`
+nproc=`expr $nproc + 0`
+ncpu=`cat /proc/stat | grep ^cpu[0-9] | wc -l`
+ncpu=`expr $ncpu + 0`
+set `free | grep ^Mem:`
+ram=$2
+ramused=$3
+ramfree=$4
+ramshar=$5
+rambuff=$6
+ramcach=$7
+
+set `free | grep ^Swap:`
+swap=$2
+swapused=$3
+swapfree=$4
+
+set `free | grep buffers/cache:|sed 's|-/+ buffers/cache:||'`
+bucaused=$1
+bucafree=$2
+
+set `uptime | sed 's/.*average://
+s/,//g'`
+runq=$2
+
+$RRDTOOL update $DIR/misc.rrd N:$ncpu:$ram:$swap:$nproc:$ramused:$ramfree:$ramshar:$rambuff:$ramcach:$swapused:$swapfree:$bucaused:$bucafree:$runq

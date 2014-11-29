@@ -1,0 +1,118 @@
+#!/bin/sh
+#
+# $Id: linuxstat_cr,v 1.6 2005/07/16 13:02:39 boris Exp $
+#
+RRDTOOL=/usr/bin/rrdtool
+DIR=/var/lib/rrd/linuxstat
+
+STATFILE=$DIR/cpu2.rrd
+if [ -r $STATFILE ] ; then
+  echo "File $STATFILE already exists!"
+else
+  $RRDTOOL create "$STATFILE" --start -1d \
+                    DS:user:COUNTER:600:0:30000 \
+                    DS:nice:COUNTER:600:0:30000 \
+                    DS:system:COUNTER:600:0:30000 \
+                    DS:idle:COUNTER:600:0:30000 \
+                    DS:mode1:COUNTER:600:0:30000 \
+                    DS:mode2:COUNTER:600:0:30000 \
+                    DS:mode3:COUNTER:600:0:30000 \
+                    RRA:AVERAGE:0.999:1:600 \
+                    RRA:AVERAGE:0.999:6:700 \
+                    RRA:AVERAGE:0.999:24:775 \
+                    RRA:AVERAGE:0.999:288:797 
+  if [ $? -eq 0 ] ; then
+    echo "File $STATFILE created"
+  else 
+    echo "File $STATFILE NOT created!"
+  fi
+fi
+
+STATFILE=$DIR/page.rrd
+if [ -r $STATFILE ] ; then
+  echo "File $STATFILE already exists!"
+else
+  $RRDTOOL create "$STATFILE" --start -1d \
+                    DS:pgi:COUNTER:600:0:U \
+                    DS:pgo:COUNTER:600:0:U \
+                    DS:swi:COUNTER:600:0:U \
+                    DS:swo:COUNTER:600:0:U \
+                    RRA:AVERAGE:0.999:1:600 \
+                    RRA:AVERAGE:0.999:6:700 \
+                    RRA:AVERAGE:0.999:24:775 \
+                    RRA:AVERAGE:0.999:288:797 
+  if [ $? -eq 0 ] ; then
+    echo "File $STATFILE created"
+  else 
+    echo "File $STATFILE NOT created!"
+  fi
+fi
+
+STATFILE=$DIR/proc.rrd
+if [ -r $STATFILE ] ; then
+  echo "File $STATFILE already exists!"
+else
+  $RRDTOOL create "$STATFILE" --start -1d \
+                    DS:intr:COUNTER:600:0:U \
+                    DS:ctxt:COUNTER:600:0:U \
+                    DS:proc:COUNTER:600:0:U \
+                    RRA:AVERAGE:0.999:1:600 \
+                    RRA:AVERAGE:0.999:6:700 \
+                    RRA:AVERAGE:0.999:24:775 \
+                    RRA:AVERAGE:0.999:288:797 
+  if [ $? -eq 0 ] ; then
+    echo "File $STATFILE created"
+  else 
+    echo "File $STATFILE NOT created!"
+  fi
+fi
+
+STATFILE=$DIR/disk.rrd
+if [ -r $STATFILE ] ; then
+  echo "File $STATFILE already exists!"
+else
+  $RRDTOOL create "$STATFILE" --start -1d \
+                    DS:rdop:COUNTER:600:0:U \
+                    DS:rdbl:COUNTER:600:0:U \
+                    DS:wrop:COUNTER:600:0:U \
+                    DS:wrbl:COUNTER:600:0:U \
+                    RRA:AVERAGE:0.999:1:600 \
+                    RRA:AVERAGE:0.999:6:700 \
+                    RRA:AVERAGE:0.999:24:775 \
+                    RRA:AVERAGE:0.999:288:797 
+  if [ $? -eq 0 ] ; then
+    echo "File $STATFILE created"
+  else 
+    echo "File $STATFILE NOT created!"
+  fi
+fi
+
+STATFILE=$DIR/misc.rrd
+if [ -r $STATFILE ] ; then
+  echo "File $STATFILE already exists!"
+else
+  $RRDTOOL create "$STATFILE" --start -1d \
+                    DS:ncpu:GAUGE:600:0:8 \
+                    DS:ram:GAUGE:600:0:U \
+                    DS:swap:GAUGE:600:0:U \
+                    DS:nproc:GAUGE:600:0:U \
+                    DS:ramused:GAUGE:600:0:U \
+                    DS:ramfree:GAUGE:600:0:U \
+                    DS:ramshar:GAUGE:600:0:U \
+                    DS:rambuff:GAUGE:600:0:U \
+                    DS:ramcach:GAUGE:600:0:U \
+                    DS:swapused:GAUGE:600:0:U \
+                    DS:swapfree:GAUGE:600:0:U \
+                    DS:bucaused:GAUGE:600:0:U \
+                    DS:bucafree:GAUGE:600:0:U \
+                    DS:runq:GAUGE:600:0:U \
+                    RRA:AVERAGE:0.999:1:600 \
+                    RRA:AVERAGE:0.999:6:700 \
+                    RRA:AVERAGE:0.999:24:775 \
+                    RRA:AVERAGE:0.999:288:797 
+  if [ $? -eq 0 ] ; then
+    echo "File $STATFILE created"
+  else 
+    echo "File $STATFILE NOT created!"
+  fi
+fi
