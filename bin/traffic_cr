@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+#
+host=$1
+iface=$2
+if [ -z $host ] || [ -z $iface ]
+then
+  echo "Usage tarffic_cr <host> <iface>"
+  exit 1
+fi
+
+RRDTOOL=/usr/bin/rrdtool
+DIR=/var/lib/rrd/linuxstat/$host
+
+if [ ! -d $DIR ]; then
+  mkdir -p $DIR
+  if [ -d $DIR ]; then
+    echo "Created $DIR"
+  else
+    echo "Could not create $DIR"
+    exit 1
+  fi
+fi
+
+STATFILE=$DIR/$iface.rrd
+if [ -r $STATFILE ] ; then
+  echo "File $STATFILE already exists!"
+else
+  $RRDTOOL create "$STATFILE" --start -1d \
+                    DS:in:COUNTER:600:0:U \
+                    DS:out:COUNTER:600:0:U \
+                    RRA:AVERAGE:0.999:1:600 \
+                    RRA:AVERAGE:0.999:6:700 \
+                    RRA:AVERAGE:0.999:24:775 \
+                    RRA:AVERAGE:0.999:288:797 
+  if [ $? -eq 0 ] ; then
+    echo "File $STATFILE created"
+  else 
+    echo "File $STATFILE NOT created!"
+  fi
+fi
