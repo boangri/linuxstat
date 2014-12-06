@@ -1,5 +1,3 @@
-$Id: BUGS,v 1.2 2005/07/23 10:17:50 boris Exp $
-
 Known bugs, problems, etc.
 
 1. RRDTool only version 1.0.41 is working 
@@ -7,4 +5,4 @@ more recents versions (1.0.46, 1.0.48) complain that "invalid x-grid format"
 
 2. SMP systems - CPU load - does not work correctly
 
-3. "Выбросы" на графиках, отражающих переменные типа COUNTER, после перезагрузок системы.
+3. "Р’С‹Р±СЂРѕСЃС‹" РЅР° РіСЂР°С„РёРєР°С…, РѕС‚СЂР°Р¶Р°СЋС‰РёС… РїРµСЂРµРјРµРЅРЅС‹Рµ С‚РёРїР° COUNTER, РїРѕСЃР»Рµ РїРµСЂРµР·Р°РіСЂСѓР·РѕРє СЃРёСЃС‚РµРјС‹.
