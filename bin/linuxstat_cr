@@ -2,8 +2,22 @@
 #
 # $Id: linuxstat_cr,v 1.6 2005/07/16 13:02:39 boris Exp $
 #
+host=$1
+if [ -z $host ]
+then
+  echo "Usage linuxstat_cr <host>"
+  exit 1
+fi
 RRDTOOL=/usr/bin/rrdtool
-DIR=/var/lib/rrd/linuxstat
+DIR=/var/lib/rrd/linuxstat/$host
+
+if [ !-d $DIR ]; then
+  mkdir -p $DIR
+  if [ !-d $DIR ]; then
+    echo "Could not create $DIR"
+    exit 1
+  fi
+fi
 
 STATFILE=$DIR/cpu2.rrd
 if [ -r $STATFILE ] ; then

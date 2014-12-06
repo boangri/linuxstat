@@ -1,42 +1,59 @@
 #!/bin/sh
 #
-# $Id: linuxstat_upd,v 1.8 2005/07/17 17:56:50 boris Exp $
 #
+host=$1
+if [ -z $host ]
+then
+  echo "Usage linuxstat_upd <host>"
+  exit 1
+fi
 RRDTOOL=/usr/bin/rrdtool
-DIR=/var/lib/rrd/linuxstat
+DIR=/var/lib/rrd/linuxstat/$host
+ssh="ssh $host"
+xstat=/tmp/stat$$
+xfree=/tmp/free$$
+xps=/tmp/xps$$
+xuptime=/tmp/upt$$
 
-btime=`cat /proc/stat| grep btime |sed 's/btime //'`
+$ssh cat /proc/stat > $xstat
+$ssh free > $xfree
+$ssh ps -e > $xps
+$ssh uptime > $xuptime
+
+btime=`cat $xstat| grep btime |sed 's/btime //'`
 now=`date +%s`
 uptime=`expr $now - $btime`
 
-set `cat /proc/stat |grep "^cpu"| grep -v "^cpu[0-7]"`
-$RRDTOOL update $DIR/cpu.rrd N:$2:$3:$4:$5
+set `cat $xstat |grep "^cpu"| grep -v "^cpu[0-7]"`
 $RRDTOOL update $DIR/cpu2.rrd N:$2:$3:$4:$5:$6:$7:$8
 
-if [ $uptime -gt 300 ] ; then
-  set `cat /proc/stat |grep "^page"`
-  pgi=$2 ; pgo=$3
-  set `cat /proc/stat |grep "^swap"`
-  swi=$2 ; swo=$3
+
+if [ $uptime -gt 600 ] ; then
+  #set `cat $xstat |grep "^page"`
+  #pgi=$2 ; pgo=$3
+  pgi=U ; pgo=U
+  #set `cat $xstat |grep "^swap"`
+  #swi=$2 ; swo=$3
+  swi=U ; swo=U
   $RRDTOOL update $DIR/page.rrd N:$pgi:$pgo:$swi:$swo
 
-  set `cat /proc/stat |grep "^intr"`
+  set `cat $xstat |grep "^intr"`
   intr=$2
-  set `cat /proc/stat |grep "^ctxt"`
+  set `cat $xstat |grep "^ctxt"`
   ctxt=$2
-  set `cat /proc/stat |grep "^processes"`
+  set `cat $xstat |grep "^processes"`
   proc=$2
   $RRDTOOL update $DIR/proc.rrd N:$intr:$ctxt:$proc
 
-  set `cat /proc/stat | grep ^disk_io|cut -d: -f3|tr -s "\(\)," "   "`
-  $RRDTOOL update $DIR/disk.rrd N:$2:$3:$4:$5
+#  set `cat $xstat | grep ^disk_io|cut -d: -f3|tr -s "\(\)," "   "`
+#  $RRDTOOL update $DIR/disk.rrd N:$2:$3:$4:$5
 fi
 
-nproc=`ps -e|wc -l`
+nproc=`cat $xps|wc -l`
 nproc=`expr $nproc + 0`
-ncpu=`cat /proc/stat | grep ^cpu[0-9] | wc -l`
+ncpu=`cat $xstat | grep ^cpu[0-9] | wc -l`
 ncpu=`expr $ncpu + 0`
-set `free | grep ^Mem:`
+set `cat $xfree | grep ^Mem:`
 ram=$2
 ramused=$3
 ramfree=$4
@@ -44,17 +61,19 @@ ramshar=$5
 rambuff=$6
 ramcach=$7
 
-set `free | grep ^Swap:`
+set `cat $xfree | grep ^Swap:`
 swap=$2
 swapused=$3
 swapfree=$4
 
-set `free | grep buffers/cache:|sed 's|-/+ buffers/cache:||'`
+set `cat $xfree | grep buffers/cache:|sed 's|-/+ buffers/cache:||'`
 bucaused=$1
 bucafree=$2
 
-set `uptime | sed 's/.*average://
+set `cat $xuptime | sed 's/.*average://
 s/,//g'`
 runq=$2
 
 $RRDTOOL update $DIR/misc.rrd N:$ncpu:$ram:$swap:$nproc:$ramused:$ramfree:$ramshar:$rambuff:$ramcach:$swapused:$swapfree:$bucaused:$bucafree:$runq
+
+rm -f $xstat $xfree $xps $uptime
