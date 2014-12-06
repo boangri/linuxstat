@@ -11,9 +11,9 @@ fi
 RRDTOOL=/usr/bin/rrdtool
 DIR=/var/lib/rrd/linuxstat/$host
 
-if [ !-d $DIR ]; then
+if [ ! -d $DIR ]; then
   mkdir -p $DIR
-  if [ !-d $DIR ]; then
+  if [ ! -d $DIR ]; then
     echo "Could not create $DIR"
     exit 1
   fi
