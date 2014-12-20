@@ -227,8 +227,9 @@
   CDEF:nsi=0,ns,- 
   AREA:dr#00FF00:"Disk reads" 
   AREA:dwi#008000:"Disk writes" 
-  LINE1:nr#0000FF:"Network reads" 
-  LINE1:nsi#000080:"Network sends" 
+  LINE1:nr#FF0000:"Network reads" 
+  LINE1:nsi#0000FF:"Network sends" 
+  LINE1:dr#008000: 
  > 
  <BR> 
 
