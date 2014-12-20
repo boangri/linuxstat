@@ -77,4 +77,4 @@ runq=$2
 
 $RRDTOOL update $DIR/misc.rrd N:$ncpu:$ram:$swap:$nproc:$ramused:$ramfree:$ramshar:$rambuff:$ramcach:$swapused:$swapfree:$bucaused:$bucafree:$runq
 
-rm -f $xstat $xfree $xps $uptime
+rm -f $xstat $xfree $xps $xuptime
