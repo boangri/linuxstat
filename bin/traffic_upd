@@ -1,16 +1,17 @@
 #!/bin/sh
 #
 #
-host=$1
-iface=$2
+domain=$1
+host=$2
+iface=$3
 if [ -z $host ] || [ -z $iface ]
 then
   echo "Usage tarffic_upd <host> <iface>"
   exit 1
 fi
 RRDTOOL=/usr/bin/rrdtool
-DIR=/var/lib/rrd/linuxstat/$host
-
-data=N:`ssh $host /sbin/ifconfig $iface | grep "RX by"| sed 's/.*RX bytes:\([0-9]*\) .*TX bytes:\([0-9]*\) .*/\1:\2/'`
+DIR=/var/lib/rrd/linuxstat/$domain/$host
+ssh="ssh -i id_rsa_dm -l dmed_magento $host.$domain"
+data=N:`$ssh /sbin/ifconfig $iface | grep "RX by"| sed 's/.*RX bytes:\([0-9]*\) .*TX bytes:\([0-9]*\) .*/\1:\2/'`
 
 $RRDTOOL update $DIR/$iface.rrd $data

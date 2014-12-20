@@ -1,15 +1,16 @@
 #!/bin/sh
 #
-# $Id: linuxstat_cr,v 1.6 2005/07/16 13:02:39 boris Exp $
 #
-host=$1
-if [ -z $host ]
+domain=$1
+host=$2
+if [ -z $host ] || [ -z $domain ] 
 then
-  echo "Usage linuxstat_cr <host>"
+  echo "Usage linuxstat_cr <domain> <host>"
   exit 1
 fi
+
 RRDTOOL=/usr/bin/rrdtool
-DIR=/var/lib/rrd/linuxstat/$host
+DIR=/var/lib/rrd/linuxstat/$domain/$host
 
 if [ ! -d $DIR ]; then
   mkdir -p $DIR

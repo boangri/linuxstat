@@ -1,0 +1,15 @@
+#!/bin/sh
+#
+#
+domain=$1
+host=$2
+RRDTOOL=/usr/bin/rrdtool
+DIR=/var/lib/rrd/linuxstat/$domain/$host
+ssh="ssh -i id_rsa_dm -l dmed_magento $host.$domain"
+set `$ssh cat /proc/drbd |tail -1`
+ns=`echo $1|sed 's/ns://'`
+nr=`echo $2|sed 's/nr://'`
+dw=`echo $3|sed 's/dw://'`
+dr=`echo $4|sed 's/dr://'`
+oos=`echo ${13}|sed 's/oos://'`
+$RRDTOOL update $DIR/drbd.rrd N:$ns:$nr:$dw:$dr:$oos

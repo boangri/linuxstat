@@ -1,16 +1,17 @@
 #!/bin/bash
 #
 #
-host=$1
-iface=$2
-if [ -z $host ] || [ -z $iface ]
+domain=$1
+host=$2
+iface=$3
+if [ -z $host ] || [ -z $iface ] || [ -z $domain ] 
 then
-  echo "Usage tarffic_cr <host> <iface>"
+  echo "Usage tarffic_cr <domain> <host> <iface>"
   exit 1
 fi
 
 RRDTOOL=/usr/bin/rrdtool
-DIR=/var/lib/rrd/linuxstat/$host
+DIR=/var/lib/rrd/linuxstat/$domain/$host
 
 if [ ! -d $DIR ]; then
   mkdir -p $DIR
